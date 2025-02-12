@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIP-OS v7.1.0.8</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+</head>
+<body class="pip-body">
+    <div class="scan-lines"></div>
+    <div class="pip-container">
+        <div class="pip-header">
+            <div class="header-left">
+                <span class="pip-title">PIP-OS v7.1.0.8</span>
+                <span class="pip-status">STATUS: All Systems Nominal</span>
+            </div>
+            <div class="header-right">
+                <span class="pip-time" id="pipTime">00:00:00</span>
+                <button onclick="logout()" class="pip-btn exit-btn">
+                    <i class="fas fa-power-off"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="pip-content">
+            <div class="pip-sidebar">
+                <button class="pip-tab active" data-tab="notes">
+                    <i class="fas fa-book"></i> NOTES
+                </button>
+                <button class="pip-tab" data-tab="links">
+                    <i class="fas fa-link"></i> LINKS
+                </button>
+                <button class="pip-tab" data-tab="files">
+                    <i class="fas fa-folder"></i> FILES
+                </button>
+                <button class="pip-tab" data-tab="trash">
+                    <i class="fas fa-trash"></i> TRASH
+                </button>
+                <button class="pip-tab" data-tab="terminal">
+                    <i class="fas fa-terminal"></i> TERMINAL
+                </button>
+            </div>
+
+            <div class="pip-main">
+                <!-- Notes Tab -->
+                <div class="pip-tab-content active" id="notes-content">
+                    <div class="notes-header">
+                        <h2 class="section-title">NOTES</h2>
+                        <button class="pip-btn add-btn" id="addNoteBtn">
+                            <i class="fas fa-plus"></i> NEW NOTE
+                        </button>
+                    </div>
+                    <div class="notes-list" id="notesList"></div>
+                </div>
+
+                <!-- Links Tab -->
+                <div class="pip-tab-content" id="links-content">
+                    <div class="links-header">
+                        <h2 class="section-title">LINKS</h2>
+                        <button class="pip-btn add-btn" id="addLinkBtn">
+                            <i class="fas fa-plus"></i> NEW LINK
+                        </button>
+                    </div>
+                    <div class="links-list" id="linksList"></div>
+                </div>
+
+                <!-- Files Tab -->
+                <div class="pip-tab-content" id="files-content">
+                    <div class="files-header">
+                        <h2 class="section-title">FILES</h2>
+                        <button class="pip-btn add-btn" id="uploadBtn">
+                            <i class="fas fa-cloud-upload-alt"></i> UPLOAD FILE
+                        </button>
+                    </div>
+                    <div class="files-list" id="filesList"></div>
+                    <div class="upload-area" id="uploadArea" style="display: none;">
+                        <div class="upload-container">
+                            <div class="upload-header">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>UPLOAD FILE</span>
+                            </div>
+                            <div class="upload-content">
+                                <label for="fileInput" class="file-select-btn">
+                                    <i class="fas fa-folder-open"></i>
+                                    SELECT FILE
+                                </label>
+                                <input type="file" id="fileInput" hidden>
+                                <div class="selected-file" id="selectedFile" style="display: none;">
+                                    <div class="file-icon">
+                                        <i class="fas fa-file"></i>
+                                    </div>
+                                    <div class="file-details">
+                                        <div class="file-name" id="fileName">filename.txt</div>
+                                        <div class="file-info">
+                                            <span class="file-size" id="fileSize">0 KB</span>
+                                            <span class="file-type" id="fileType">text/plain</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="upload-actions">
+                                <button class="pip-btn upload-btn" id="uploadNowBtn" disabled>
+                                    <i class="fas fa-upload"></i> UPLOAD
+                                </button>
+                                <button class="pip-btn cancel-btn" id="cancelUploadBtn">
+                                    <i class="fas fa-times"></i> CANCEL
+                                </button>
+                            </div>
+                            <div id="uploadProgress" class="upload-progress" style="display: none;">
+                                <div class="progress-bar">
+                                    <div class="progress-fill"></div>
+                                </div>
+                                <div class="progress-text">Uploading: <span id="progressText">0%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trash Tab -->
+                <div class="pip-tab-content" id="trash-content">
+                    <div class="trash-header">
+                        <h2 class="section-title">TRASH</h2>
+                        <div class="trash-actions">
+                            <button class="pip-btn warning-btn" id="emptyTrashBtn">
+                                <i class="fas fa-trash-alt"></i> EMPTY TRASH
+                            </button>
+                        </div>
+                    </div>
+                    <div class="trash-list" id="trashList"></div>
+                </div>
+
+                <!-- Terminal Tab -->
+                <div class="pip-tab-content" id="terminal-content">
+                    <div class="terminal-output" id="output"></div>
+                    <div class="terminal-input-line">
+                        <span class="prompt">>></span>
+                        <input type="text" id="terminalInput" autocomplete="off" spellcheck="false">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note Modal -->
+    <div class="pip-modal" id="noteModal">
+        <div class="pip-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> <span id="modalTitle">NEW NOTE</span></h2>
+                <button class="modal-close" id="closeNoteBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="note-form">
+                <div class="form-group">
+                    <label for="noteTitle">
+                        <i class="fas fa-heading"></i> TITLE
+                    </label>
+                    <input type="text" id="noteTitle" placeholder="Enter note title..." class="pip-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="noteCategory">
+                        <i class="fas fa-tag"></i> CATEGORY
+                    </label>
+                    <select id="noteCategory" class="pip-input">
+                        <option value="general">General</option>
+                        <option value="work">Work</option>
+                        <option value="personal">Personal</option>
+                        <option value="important">Important</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="notePriority">
+                        <i class="fas fa-flag"></i> PRIORITY
+                    </label>
+                    <div class="priority-buttons">
+                        <button class="priority-btn" data-priority="low">
+                            <i class="fas fa-arrow-down"></i> Low
+                        </button>
+                        <button class="priority-btn" data-priority="medium">
+                            <i class="fas fa-minus"></i> Medium
+                        </button>
+                        <button class="priority-btn" data-priority="high">
+                            <i class="fas fa-arrow-up"></i> High
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="noteContent">
+                        <i class="fas fa-align-left"></i> CONTENT
+                    </label>
+                    <textarea id="noteContent" placeholder="Enter note content..." class="pip-input note-editor"></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="note-meta">
+                    <span class="word-count">
+                        <i class="fas fa-font"></i> Words: <span id="wordCount">0</span>
+                    </span>
+                    <span class="char-count">
+                        <i class="fas fa-text-width"></i> Chars: <span id="charCount">0</span>
+                    </span>
+                    <span class="last-edited">
+                        <i class="fas fa-history"></i> Last edited: <span id="lastEdited">Just now</span>
+                    </span>
+                </div>
+                <div class="modal-buttons">
+                    <button class="pip-btn preview-btn" id="previewNoteBtn">
+                        <i class="fas fa-eye"></i> PREVIEW
+                    </button>
+                    <button class="pip-btn save-btn" id="saveNoteBtn">
+                        <i class="fas fa-save"></i> SAVE
+                    </button>
+                    <button class="pip-btn cancel-btn" id="cancelNoteBtn">
+                        <i class="fas fa-times"></i> CANCEL
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Note Preview Panel -->
+        <div class="preview-panel" id="previewPanel">
+            <div class="preview-header">
+                <h3><i class="fas fa-eye"></i> PREVIEW</h3>
+                <button class="close-preview" id="closePreviewBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="preview-content" id="previewContent"></div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="pip-confirm-modal" id="confirmModal">
+        <div class="pip-confirm-content">
+            <div class="confirm-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>CONFIRM DELETE</span>
+            </div>
+            <div class="confirm-message">Are you sure you want to delete this file?</div>
+            <div class="confirm-buttons">
+                <button class="pip-btn confirm-yes">
+                    <i class="fas fa-check"></i> YES
+                </button>
+                <button class="pip-btn confirm-no">
+                    <i class="fas fa-times"></i> NO
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Confirmation Modal -->
+    <div class="pip-confirm-modal" id="uploadConfirmModal">
+        <div class="pip-confirm-content">
+            <div class="confirm-header">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>CONFIRM UPLOAD</span>
+            </div>
+            <div class="confirm-message">
+                <div class="file-info">
+                    <p class="file-name">Selected file: <span id="selectedFileName">No file selected</span></p>
+                    <p class="file-size">Size: <span id="selectedFileSize">0 KB</span></p>
+                    <p class="file-type">Type: <span id="selectedFileType">Unknown</span></p>
+                </div>
+                <p class="upload-confirm-text">Do you want to upload this file?</p>
+            </div>
+            <div class="confirm-buttons">
+                <button class="pip-btn confirm-yes" id="confirmUpload">
+                    <i class="fas fa-check"></i> UPLOAD
+                </button>
+                <button class="pip-btn confirm-no" id="cancelUpload">
+                    <i class="fas fa-times"></i> CANCEL
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Modal -->
+    <div class="pip-modal" id="linkModal">
+        <div class="pip-modal-content">
+            <h2><i class="fas fa-link"></i> ADD LINK</h2>
+            <input type="text" id="linkTitle" class="pip-input" placeholder="Link Title">
+            <input type="url" id="linkUrl" class="pip-input" placeholder="URL (https://...)">
+            <textarea id="linkDescription" class="pip-input" placeholder="Description (optional)"></textarea>
+            <div class="modal-buttons">
+                <button class="pip-btn save-btn" id="saveLinkBtn">SAVE</button>
+                <button class="pip-btn cancel-btn" id="cancelLinkBtn">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="pip-terminal.js"></script>
+</body>
+</html> 
