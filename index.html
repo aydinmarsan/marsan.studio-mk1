@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pip-Boy Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="pip-boy-container">
+        <div class="pip-boy-frame">
+            <div class="pip-boy-screen">
+                <div class="scanline"></div>
+                <div class="login-container">
+                    <div class="pip-boy-header">
+                        <div class="header-line"></div>
+                        <h1>VAULT-TEC SYSTEMS</h1>
+                        <div class="header-line"></div>
+                    </div>
+                    
+                    <div class="login-form">
+                        <div class="form-title">SİSTEM GİRİŞİ</div>
+                        <div class="input-group">
+                            <label for="username">KULLANICI ADI:</label>
+                            <input type="text" id="username" class="pip-boy-input">
+                        </div>
+                        <div class="input-group">
+                            <label for="password">ŞİFRE:</label>
+                            <input type="password" id="password" class="pip-boy-input">
+                        </div>
+                        <button id="login-btn" class="pip-boy-btn">GİRİŞ</button>
+                        <div id="login-error" class="error-message"></div>
+                    </div>
+                    
+                    <div class="pip-boy-footer">
+                        <div>STATUS: STANDBY</div>
+                        <div>VAULT-TEC (C) 2077</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Kütüphaneleri -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="app.js"></script>
+</body>
+</html> 

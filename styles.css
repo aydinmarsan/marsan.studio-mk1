@@ -1,0 +1,215 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+:root {
+    --pip-boy-green: #14fe17;
+    --pip-boy-dark-green: #0a280b;
+    --pip-boy-light-green: #33ff36;
+    --pip-boy-bg: #021102;
+    --pip-boy-frame: #3a3a3a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'VT323', monospace;
+}
+
+body {
+    background-color: #000;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--pip-boy-green);
+}
+
+.pip-boy-container {
+    width: 100%;
+    max-width: 600px;
+    height: 90vh;
+    max-height: 800px;
+}
+
+.pip-boy-frame {
+    width: 100%;
+    height: 100%;
+    background-color: var(--pip-boy-frame);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.pip-boy-screen {
+    width: 100%;
+    height: 100%;
+    background-color: var(--pip-boy-bg);
+    border-radius: 15px;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+    border: 4px solid #222;
+}
+
+.scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(20, 254, 23, 0.1) 50%,
+        rgba(20, 254, 23, 0) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.login-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.pip-boy-header {
+    text-align: center;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.header-line {
+    height: 2px;
+    background-color: var(--pip-boy-green);
+}
+
+.pip-boy-header h1 {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px var(--pip-boy-green);
+}
+
+.login-form {
+    background-color: rgba(10, 40, 11, 0.5);
+    border: 2px solid var(--pip-boy-green);
+    padding: 30px;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+    text-shadow: 0 0 5px var(--pip-boy-green);
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.pip-boy-input {
+    width: 100%;
+    background-color: var(--pip-boy-dark-green);
+    border: 1px solid var(--pip-boy-green);
+    color: var(--pip-boy-light-green);
+    padding: 10px;
+    font-size: 1.2rem;
+    outline: none;
+}
+
+.pip-boy-input:focus {
+    box-shadow: 0 0 10px var(--pip-boy-green);
+}
+
+.pip-boy-btn {
+    width: 100%;
+    background-color: var(--pip-boy-dark-green);
+    color: var(--pip-boy-light-green);
+    border: 2px solid var(--pip-boy-green);
+    padding: 10px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.pip-boy-btn:hover {
+    background-color: var(--pip-boy-green);
+    color: var(--pip-boy-dark-green);
+}
+
+.error-message {
+    color: #ff5858;
+    margin-top: 10px;
+    text-align: center;
+    height: 20px;
+}
+
+.pip-boy-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    border-top: 1px solid var(--pip-boy-green);
+    padding-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .pip-boy-container {
+        height: 100vh;
+        max-height: none;
+    }
+    
+    .pip-boy-frame {
+        border-radius: 0;
+    }
+}
+
+/* Hata Animasyonu */
+.shake-animation {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+    10%, 90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+    20%, 80% {
+        transform: translate3d(2px, 0, 0);
+    }
+    30%, 50%, 70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+    40%, 60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+/* Başarılı Giriş Animasyonu */
+.success-animation {
+    animation: successPulse 1.5s ease;
+}
+
+@keyframes successPulse {
+    0% {
+        filter: brightness(1);
+    }
+    50% {
+        filter: brightness(1.5);
+    }
+    100% {
+        filter: brightness(1);
+    }
+} 
