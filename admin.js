@@ -102,8 +102,10 @@ saveNoteBtn.addEventListener('click', () => {
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
             alert('Not güncellendi!');
-            // Güncelleme işlemi başarılı olduğunda sayfayı yenile
-            window.location.reload();
+            document.querySelector('.note-form').classList.add('hidden');
+            resetNoteForm();
+            // Sadece notlar sekmesini yenile
+            fetchNotes();
         }).catch(error => {
             console.error('Not güncellenemedi:', error);
             alert('Not güncellenemedi: ' + error.message);
@@ -115,8 +117,10 @@ saveNoteBtn.addEventListener('click', () => {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
             alert('Not kaydedildi!');
-            // Kaydetme işlemi başarılı olduğunda sayfayı yenile
-            window.location.reload();
+            document.querySelector('.note-form').classList.add('hidden');
+            resetNoteForm();
+            // Sadece notlar sekmesini yenile
+            fetchNotes();
         }).catch(error => {
             console.error('Not kaydedilemedi:', error);
             alert('Not kaydedilemedi: ' + error.message);
@@ -154,8 +158,10 @@ saveLinkBtn.addEventListener('click', () => {
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
             alert('Link güncellendi!');
-            // Güncelleme işlemi başarılı olduğunda sayfayı yenile
-            window.location.reload();
+            document.querySelector('.link-form').classList.add('hidden');
+            resetLinkForm();
+            // Sadece linkler sekmesini yenile
+            fetchLinks();
         }).catch(error => {
             console.error('Link güncellenemedi:', error);
             alert('Link güncellenemedi: ' + error.message);
@@ -168,8 +174,10 @@ saveLinkBtn.addEventListener('click', () => {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
             alert('Link kaydedildi!');
-            // Kaydetme işlemi başarılı olduğunda sayfayı yenile
-            window.location.reload();
+            document.querySelector('.link-form').classList.add('hidden');
+            resetLinkForm();
+            // Sadece linkler sekmesini yenile
+            fetchLinks();
         }).catch(error => {
             console.error('Link kaydedilemedi:', error);
             alert('Link kaydedilemedi: ' + error.message);
@@ -703,8 +711,8 @@ async function deleteNote(noteId) {
         db.collection('notes').doc(noteId).delete()
             .then(() => {
                 playSound('https://www.soundjay.com/buttons/sounds/button-09.mp3');
-                // Silme işlemi başarılı olduğunda sayfayı yenile
-                window.location.reload();
+                // Sadece notlar sekmesini yenile
+                fetchNotes();
             })
             .catch(error => {
                 console.error('Not silinemedi:', error);
@@ -730,8 +738,8 @@ function deleteLink(linkId) {
             db.collection('links').doc(linkId).delete()
                 .then(() => {
                     playSound('https://www.soundjay.com/buttons/sounds/button-09.mp3');
-                    // Silme işlemi başarılı olduğunda sayfayı yenile
-                    window.location.reload();
+                    // Sadece linkler sekmesini yenile
+                    fetchLinks();
                 })
                 .catch(error => {
                     console.error('Link silinemedi:', error);
@@ -758,8 +766,8 @@ function deleteUser(userId) {
             db.collection('users').doc(userId).delete()
                 .then(() => {
                     playSound('https://www.soundjay.com/buttons/sounds/button-09.mp3');
-                    // Silme işlemi başarılı olduğunda sayfayı yenile
-                    window.location.reload();
+                    // Sadece kullanıcılar sekmesini yenile
+                    fetchUsers();
                 })
                 .catch(error => {
                     console.error('Kullanıcı silinemedi:', error);
@@ -770,4 +778,22 @@ function deleteUser(userId) {
                 });
         }
     });
+}
+
+// Sekme içeriğini yenileme fonksiyonu
+function refreshCurrentTab() {
+    // Aktif sekmeyi bul
+    const activeTab = document.querySelector('.menu-item.active');
+    if (activeTab) {
+        const section = activeTab.dataset.section;
+        
+        // İlgili sekmenin içeriğini yenile
+        if (section === 'notes') {
+            fetchNotes();
+        } else if (section === 'links') {
+            fetchLinks();
+        } else if (section === 'users') {
+            fetchUsers();
+        }
+    }
 } 
