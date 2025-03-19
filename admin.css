@@ -512,4 +512,91 @@ input:checked + .toggle-slider:before {
 
 .items-list::-webkit-scrollbar-thumb:hover {
     background-color: var(--pip-boy-light-green);
+}
+
+/* Dialog stilleri */
+.pip-boy-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(2, 17, 2, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.pip-boy-dialog.show {
+    opacity: 1;
+}
+
+.pip-boy-dialog-content {
+    background-color: var(--pip-boy-dark-green);
+    border: 2px solid var(--pip-boy-green);
+    padding: 20px;
+    border-radius: 5px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    text-align: center;
+}
+
+.pip-boy-dialog-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(20, 254, 23, 0.1) 50%,
+        rgba(20, 254, 23, 0) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 1;
+    animation: scanlineMove 8s linear infinite;
+}
+
+.dialog-message {
+    font-size: 1.5rem;
+    color: var(--pip-boy-light-green);
+    margin-bottom: 20px;
+    text-shadow: 0 0 5px var(--pip-boy-green);
+}
+
+.dialog-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.dialog-buttons .pip-boy-btn {
+    min-width: 100px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+}
+
+.dialog-buttons .pip-boy-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--pip-boy-green);
+}
+
+/* Animasyon efekti için */
+.animation-enabled .pip-boy-dialog-content {
+    animation: dialogGlow 2s infinite alternate;
+}
+
+@keyframes dialogGlow {
+    from {
+        box-shadow: 0 0 10px var(--pip-boy-green);
+    }
+    to {
+        box-shadow: 0 0 20px var(--pip-boy-green);
+    }
 } 

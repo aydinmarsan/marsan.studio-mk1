@@ -416,19 +416,7 @@ function fetchNotes() {
                 // Silme butonuna tıklama
                 const deleteBtn = noteItem.querySelector('.delete-btn');
                 deleteBtn.addEventListener('click', () => {
-                    if (confirm('Bu notu silmek istediğinize emin misiniz?')) {
-                        db.collection('notes').doc(doc.id).delete()
-                            .then(() => {
-                                noteItem.remove();
-                                if (notesList.children.length === 0) {
-                                    notesList.innerHTML = '<div class="empty-message">Henüz not eklenmemiş.</div>';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Not silinemedi:', error);
-                                alert('Not silinemedi: ' + error.message);
-                            });
-                    }
+                    deleteNote(doc.id);
                 });
             });
         })
@@ -494,19 +482,7 @@ function fetchLinks() {
                 // Silme butonuna tıklama
                 const deleteBtn = linkItem.querySelector('.delete-btn');
                 deleteBtn.addEventListener('click', () => {
-                    if (confirm('Bu linki silmek istediğinize emin misiniz?')) {
-                        db.collection('links').doc(doc.id).delete()
-                            .then(() => {
-                                linkItem.remove();
-                                if (linksList.children.length === 0) {
-                                    linksList.innerHTML = '<div class="empty-message">Henüz link eklenmemiş.</div>';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Link silinemedi:', error);
-                                alert('Link silinemedi: ' + error.message);
-                            });
-                    }
+                    deleteLink(doc.id);
                 });
             });
         })
@@ -571,19 +547,7 @@ function fetchUsers() {
                 // Silme butonuna tıklama
                 const deleteBtn = userItem.querySelector('.delete-btn');
                 deleteBtn.addEventListener('click', () => {
-                    if (confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')) {
-                        db.collection('users').doc(doc.id).delete()
-                            .then(() => {
-                                userItem.remove();
-                                if (usersList.children.length === 0) {
-                                    usersList.innerHTML = '<div class="empty-message">Henüz kullanıcı eklenmemiş.</div>';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Kullanıcı silinemedi:', error);
-                                alert('Kullanıcı silinemedi: ' + error.message);
-                            });
-                    }
+                    deleteUser(doc.id);
                 });
             });
         })
@@ -688,4 +652,142 @@ document.getElementById('setting-theme').addEventListener('change', function() {
     setTimeout(() => {
         statusText.textContent = originalText;
     }, 3000);
-}); 
+});
+
+// Özel onay dialogu fonksiyonu
+function showPipBoyConfirm(message) {
+    return new Promise((resolve) => {
+        // Mevcut dialog varsa kaldır
+        const existingDialog = document.querySelector('.pip-boy-dialog');
+        if (existingDialog) {
+            existingDialog.remove();
+        }
+
+        // Dialog oluştur
+        const dialog = document.createElement('div');
+        dialog.className = 'pip-boy-dialog';
+        dialog.innerHTML = `
+            <div class="pip-boy-dialog-content">
+                <div class="dialog-message">${message}</div>
+                <div class="dialog-buttons">
+                    <button class="pip-boy-btn confirm-btn">EVET</button>
+                    <button class="pip-boy-btn cancel-btn">HAYIR</button>
+                </div>
+            </div>
+        `;
+
+        // Dialog'u sayfaya ekle
+        document.body.appendChild(dialog);
+
+        // Butonlara tıklama olayları ekle
+        const confirmBtn = dialog.querySelector('.confirm-btn');
+        const cancelBtn = dialog.querySelector('.cancel-btn');
+
+        confirmBtn.addEventListener('click', () => {
+            dialog.remove();
+            resolve(true);
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            dialog.remove();
+            resolve(false);
+        });
+
+        // Dialog'u göster
+        setTimeout(() => dialog.classList.add('show'), 10);
+    });
+}
+
+// Not silme fonksiyonunu güncelle
+async function deleteNote(noteId) {
+    const confirmed = await showPipBoyConfirm('Bu notu silmek istediğinize emin misiniz?');
+    
+    if (confirmed) {
+        const noteElement = document.querySelector(`[data-note-id="${noteId}"]`);
+        if (noteElement) {
+            noteElement.style.opacity = '0.5';
+        }
+
+        db.collection('notes').doc(noteId).delete()
+            .then(() => {
+                if (noteElement) {
+                    noteElement.remove();
+                }
+                if (notesList.children.length === 0) {
+                    notesList.innerHTML = '<div class="empty-message">Henüz not eklenmemiş.</div>';
+                }
+                playSound('https://www.soundjay.com/buttons/sounds/button-09.mp3');
+            })
+            .catch(error => {
+                console.error('Not silinemedi:', error);
+                if (noteElement) {
+                    noteElement.style.opacity = '1';
+                }
+                alert('Not silinemedi: ' + error.message);
+            });
+    }
+}
+
+// Link silme fonksiyonu
+function deleteLink(linkId) {
+    const confirmed = showPipBoyConfirm('Bu linki silmek istediğinize emin misiniz?');
+    
+    confirmed.then(result => {
+        if (result) {
+            const linkElement = document.querySelector(`[data-link-id="${linkId}"]`);
+            if (linkElement) {
+                linkElement.style.opacity = '0.5';
+            }
+
+            db.collection('links').doc(linkId).delete()
+                .then(() => {
+                    if (linkElement) {
+                        linkElement.remove();
+                    }
+                    if (linksList.children.length === 0) {
+                        linksList.innerHTML = '<div class="empty-message">Henüz link eklenmemiş.</div>';
+                    }
+                    playSound('https://www.soundjay.com/buttons/sounds/button-09.mp3');
+                })
+                .catch(error => {
+                    console.error('Link silinemedi:', error);
+                    if (linkElement) {
+                        linkElement.style.opacity = '1';
+                    }
+                    alert('Link silinemedi: ' + error.message);
+                });
+        }
+    });
+}
+
+// Kullanıcı silme fonksiyonu
+function deleteUser(userId) {
+    const confirmed = showPipBoyConfirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');
+    
+    confirmed.then(result => {
+        if (result) {
+            const userElement = document.querySelector(`[data-user-id="${userId}"]`);
+            if (userElement) {
+                userElement.style.opacity = '0.5';
+            }
+
+            db.collection('users').doc(userId).delete()
+                .then(() => {
+                    if (userElement) {
+                        userElement.remove();
+                    }
+                    if (usersList.children.length === 0) {
+                        usersList.innerHTML = '<div class="empty-message">Henüz kullanıcı eklenmemiş.</div>';
+                    }
+                    playSound('https://www.soundjay.com/buttons/sounds/button-09.mp3');
+                })
+                .catch(error => {
+                    console.error('Kullanıcı silinemedi:', error);
+                    if (userElement) {
+                        userElement.style.opacity = '1';
+                    }
+                    alert('Kullanıcı silinemedi: ' + error.message);
+                });
+        }
+    });
+} 
