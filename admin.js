@@ -95,7 +95,6 @@ saveNoteBtn.addEventListener('click', () => {
         return;
     }
     
-    // Düzenleme modu aktifse, belgeyi güncelle
     if (isEditing && currentEditingId) {
         db.collection('notes').doc(currentEditingId).update({
             title,
@@ -103,24 +102,21 @@ saveNoteBtn.addEventListener('click', () => {
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
             alert('Not güncellendi!');
-            document.querySelector('.note-form').classList.add('hidden');
-            resetNoteForm();
-            fetchNotes(); // Notları yeniden yükle
+            // Güncelleme işlemi başarılı olduğunda sayfayı yenile
+            window.location.reload();
         }).catch(error => {
             console.error('Not güncellenemedi:', error);
             alert('Not güncellenemedi: ' + error.message);
         });
     } else {
-        // Yeni not ekleme (mevcut kod)
         db.collection('notes').add({
             title,
             content,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
             alert('Not kaydedildi!');
-            document.querySelector('.note-form').classList.add('hidden');
-            resetNoteForm();
-            fetchNotes(); // Notları yeniden yükle
+            // Kaydetme işlemi başarılı olduğunda sayfayı yenile
+            window.location.reload();
         }).catch(error => {
             console.error('Not kaydedilemedi:', error);
             alert('Not kaydedilemedi: ' + error.message);
@@ -150,7 +146,6 @@ saveLinkBtn.addEventListener('click', () => {
         return;
     }
     
-    // Düzenleme modu aktifse, belgeyi güncelle
     if (isEditing && currentEditingId) {
         db.collection('links').doc(currentEditingId).update({
             title,
@@ -159,15 +154,13 @@ saveLinkBtn.addEventListener('click', () => {
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
             alert('Link güncellendi!');
-            document.querySelector('.link-form').classList.add('hidden');
-            resetLinkForm();
-            fetchLinks(); // Linkleri yeniden yükle
+            // Güncelleme işlemi başarılı olduğunda sayfayı yenile
+            window.location.reload();
         }).catch(error => {
             console.error('Link güncellenemedi:', error);
             alert('Link güncellenemedi: ' + error.message);
         });
     } else {
-        // Yeni link ekleme (mevcut kod)
         db.collection('links').add({
             title,
             url,
@@ -175,9 +168,8 @@ saveLinkBtn.addEventListener('click', () => {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
             alert('Link kaydedildi!');
-            document.querySelector('.link-form').classList.add('hidden');
-            resetLinkForm();
-            fetchLinks(); // Linkleri yeniden yükle
+            // Kaydetme işlemi başarılı olduğunda sayfayı yenile
+            window.location.reload();
         }).catch(error => {
             console.error('Link kaydedilemedi:', error);
             alert('Link kaydedilemedi: ' + error.message);
@@ -710,13 +702,9 @@ async function deleteNote(noteId) {
 
         db.collection('notes').doc(noteId).delete()
             .then(() => {
-                if (noteElement) {
-                    noteElement.remove();
-                }
-                if (notesList.children.length === 0) {
-                    notesList.innerHTML = '<div class="empty-message">Henüz not eklenmemiş.</div>';
-                }
                 playSound('https://www.soundjay.com/buttons/sounds/button-09.mp3');
+                // Silme işlemi başarılı olduğunda sayfayı yenile
+                window.location.reload();
             })
             .catch(error => {
                 console.error('Not silinemedi:', error);
@@ -728,7 +716,7 @@ async function deleteNote(noteId) {
     }
 }
 
-// Link silme fonksiyonu
+// Link silme fonksiyonunu güncelle
 function deleteLink(linkId) {
     const confirmed = showPipBoyConfirm('Bu linki silmek istediğinize emin misiniz?');
     
@@ -741,13 +729,9 @@ function deleteLink(linkId) {
 
             db.collection('links').doc(linkId).delete()
                 .then(() => {
-                    if (linkElement) {
-                        linkElement.remove();
-                    }
-                    if (linksList.children.length === 0) {
-                        linksList.innerHTML = '<div class="empty-message">Henüz link eklenmemiş.</div>';
-                    }
                     playSound('https://www.soundjay.com/buttons/sounds/button-09.mp3');
+                    // Silme işlemi başarılı olduğunda sayfayı yenile
+                    window.location.reload();
                 })
                 .catch(error => {
                     console.error('Link silinemedi:', error);
@@ -760,7 +744,7 @@ function deleteLink(linkId) {
     });
 }
 
-// Kullanıcı silme fonksiyonu
+// Kullanıcı silme fonksiyonunu güncelle
 function deleteUser(userId) {
     const confirmed = showPipBoyConfirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');
     
@@ -773,13 +757,9 @@ function deleteUser(userId) {
 
             db.collection('users').doc(userId).delete()
                 .then(() => {
-                    if (userElement) {
-                        userElement.remove();
-                    }
-                    if (usersList.children.length === 0) {
-                        usersList.innerHTML = '<div class="empty-message">Henüz kullanıcı eklenmemiş.</div>';
-                    }
                     playSound('https://www.soundjay.com/buttons/sounds/button-09.mp3');
+                    // Silme işlemi başarılı olduğunda sayfayı yenile
+                    window.location.reload();
                 })
                 .catch(error => {
                     console.error('Kullanıcı silinemedi:', error);
