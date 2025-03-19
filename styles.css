@@ -168,12 +168,124 @@ body {
 
 @media (max-width: 768px) {
     .pip-boy-container {
+        width: 100%;
         height: 100vh;
+        max-width: none;
         max-height: none;
+        padding: 0;
     }
     
     .pip-boy-frame {
         border-radius: 0;
+        box-shadow: none;
+        padding: 10px;
+    }
+    
+    .pip-boy-screen {
+        border-radius: 0;
+        padding: 15px;
+    }
+    
+    .pip-boy-header h1 {
+        font-size: 2rem;
+    }
+    
+    .form-title {
+        font-size: 1.5rem;
+    }
+    
+    .login-form {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px;
+    }
+    
+    .pip-boy-input {
+        font-size: 1.1rem;
+        padding: 12px;
+    }
+    
+    .pip-boy-btn {
+        font-size: 1.2rem;
+        padding: 12px;
+    }
+}
+
+/* Daha küçük ekranlar için ek düzenlemeler */
+@media (max-width: 480px) {
+    .pip-boy-header h1 {
+        font-size: 1.6rem;
+    }
+    
+    .login-form {
+        padding: 15px;
+    }
+    
+    .form-title {
+        font-size: 1.3rem;
+    }
+    
+    .input-group label {
+        font-size: 1rem;
+    }
+    
+    .pip-boy-input {
+        font-size: 1rem;
+        padding: 10px;
+    }
+    
+    .pip-boy-btn {
+        font-size: 1.1rem;
+    }
+    
+    .pip-boy-footer {
+        font-size: 0.9rem;
+    }
+}
+
+/* Mobil klavye açıldığında daha iyi uyumluluk */
+@media (max-height: 600px) and (max-width: 768px) {
+    .pip-boy-header {
+        margin-bottom: 15px;
+    }
+    
+    .login-form {
+        padding: 15px 10px;
+    }
+    
+    .input-group {
+        margin-bottom: 12px;
+    }
+    
+    .pip-boy-footer {
+        padding-top: 5px;
+    }
+}
+
+/* iPhone SE ve benzer küçük cihazlar */
+@media (max-width: 375px) {
+    .pip-boy-header h1 {
+        font-size: 1.4rem;
+    }
+    
+    .form-title {
+        font-size: 1.2rem;
+    }
+    
+    .pip-boy-input, .pip-boy-btn {
+        font-size: 0.95rem;
+    }
+}
+
+/* Portrait (dikey) modu için özel düzenlemeler */
+@media (orientation: portrait) and (max-width: 768px) {
+    .login-container {
+        justify-content: space-around;
+    }
+    
+    .pip-boy-screen {
+        display: flex;
+        flex-direction: column;
     }
 }
 
