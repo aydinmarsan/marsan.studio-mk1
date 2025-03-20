@@ -37,11 +37,38 @@ userDisplay.textContent = "ADMİN: MARSAN";
 
 // Çıkış butonuna tıklama
 logoutBtn.addEventListener('click', () => {
-    // Session Storage'dan oturum bilgisini sil
-    sessionStorage.removeItem('pip_boy_auth');
-    
-    // Ana sayfaya yönlendir
-    window.location.href = 'index.html';
+    // Çıkış için onay iste
+    showPipBoyConfirm('VAULT-TEC sisteminden çıkış yapmak istediğinize emin misiniz?').then((confirmed) => {
+        if (confirmed) {
+            // Çıkış sesi çal
+            playSound('https://www.soundjay.com/buttons/sounds/button-09.mp3');
+            
+            // Session Storage'dan oturum bilgisini sil
+            sessionStorage.removeItem('pip_boy_auth');
+            
+            // Çıkış animasyonu ekle
+            const pipBoyScreen = document.querySelector('.pip-boy-screen');
+            pipBoyScreen.style.transition = 'all 0.8s ease';
+            pipBoyScreen.style.opacity = '0';
+            pipBoyScreen.style.transform = 'scale(0.95)';
+            
+            // Ekranda birkaç saniye "ÇIKIŞ YAPILIYOR..." mesajı göster
+            const adminContainer = document.querySelector('.admin-container');
+            adminContainer.innerHTML = `
+                <div class="logout-message">
+                    <h2>ÇIKIŞ YAPILIYOR...</h2>
+                    <div class="loading-bar">
+                        <div class="loading-progress"></div>
+                    </div>
+                </div>
+            `;
+            
+            // Kısa bir beklemeden sonra ana sayfaya yönlendir
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+    });
 });
 
 // Sekme değiştirme
@@ -91,7 +118,7 @@ saveNoteBtn.addEventListener('click', () => {
     const content = document.getElementById('note-content').value;
     
     if (!title || !content) {
-        alert('Lütfen başlık ve içerik alanlarını doldurun.');
+        showPipBoyAlert('Lütfen başlık ve içerik alanlarını doldurun.');
         return;
     }
     
@@ -101,14 +128,15 @@ saveNoteBtn.addEventListener('click', () => {
             content,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
-            alert('Not güncellendi!');
-            document.querySelector('.note-form').classList.add('hidden');
-            resetNoteForm();
-            // Sadece notlar sekmesini yenile
-            fetchNotes();
+            showPipBoyAlert('Not güncellendi!').then(() => {
+                document.querySelector('.note-form').classList.add('hidden');
+                resetNoteForm();
+                // Sadece notlar sekmesini yenile
+                fetchNotes();
+            });
         }).catch(error => {
             console.error('Not güncellenemedi:', error);
-            alert('Not güncellenemedi: ' + error.message);
+            showPipBoyAlert('Not güncellenemedi: ' + error.message);
         });
     } else {
         db.collection('notes').add({
@@ -116,14 +144,15 @@ saveNoteBtn.addEventListener('click', () => {
             content,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
-            alert('Not kaydedildi!');
-            document.querySelector('.note-form').classList.add('hidden');
-            resetNoteForm();
-            // Sadece notlar sekmesini yenile
-            fetchNotes();
+            showPipBoyAlert('Not kaydedildi!').then(() => {
+                document.querySelector('.note-form').classList.add('hidden');
+                resetNoteForm();
+                // Sadece notlar sekmesini yenile
+                fetchNotes();
+            });
         }).catch(error => {
             console.error('Not kaydedilemedi:', error);
-            alert('Not kaydedilemedi: ' + error.message);
+            showPipBoyAlert('Not kaydedilemedi: ' + error.message);
         });
     }
 });
@@ -146,7 +175,7 @@ saveLinkBtn.addEventListener('click', () => {
     const description = document.getElementById('link-description').value;
     
     if (!title || !url) {
-        alert('Lütfen başlık ve URL alanlarını doldurun.');
+        showPipBoyAlert('Lütfen başlık ve URL alanlarını doldurun.');
         return;
     }
     
@@ -157,14 +186,15 @@ saveLinkBtn.addEventListener('click', () => {
             description,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
-            alert('Link güncellendi!');
-            document.querySelector('.link-form').classList.add('hidden');
-            resetLinkForm();
-            // Sadece linkler sekmesini yenile
-            fetchLinks();
+            showPipBoyAlert('Link güncellendi!').then(() => {
+                document.querySelector('.link-form').classList.add('hidden');
+                resetLinkForm();
+                // Sadece linkler sekmesini yenile
+                fetchLinks();
+            });
         }).catch(error => {
             console.error('Link güncellenemedi:', error);
-            alert('Link güncellenemedi: ' + error.message);
+            showPipBoyAlert('Link güncellenemedi: ' + error.message);
         });
     } else {
         db.collection('links').add({
@@ -173,14 +203,15 @@ saveLinkBtn.addEventListener('click', () => {
             description,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
-            alert('Link kaydedildi!');
-            document.querySelector('.link-form').classList.add('hidden');
-            resetLinkForm();
-            // Sadece linkler sekmesini yenile
-            fetchLinks();
+            showPipBoyAlert('Link kaydedildi!').then(() => {
+                document.querySelector('.link-form').classList.add('hidden');
+                resetLinkForm();
+                // Sadece linkler sekmesini yenile
+                fetchLinks();
+            });
         }).catch(error => {
             console.error('Link kaydedilemedi:', error);
-            alert('Link kaydedilemedi: ' + error.message);
+            showPipBoyAlert('Link kaydedilemedi: ' + error.message);
         });
     }
 });
@@ -204,12 +235,12 @@ saveUserBtn.addEventListener('click', () => {
     const username = document.getElementById('user-username').value;
     
     if (!email || !password) {
-        alert('Lütfen e-posta ve şifre alanlarını doldurun.');
+        showPipBoyAlert('Lütfen e-posta ve şifre alanlarını doldurun.');
         return;
     }
     
     if (!username) {
-        alert('Lütfen kullanıcı adı alanını doldurun.');
+        showPipBoyAlert('Lütfen kullanıcı adı alanını doldurun.');
         return;
     }
     
@@ -240,7 +271,6 @@ saveUserBtn.addEventListener('click', () => {
         })
         .then(() => {
             console.log('Kullanıcı Firestore\'a kaydedildi');
-            alert('Kullanıcı başarıyla kaydedildi!');
             
             // Formu temizle ve gizle
             document.querySelector('.user-form').classList.add('hidden');
@@ -253,8 +283,9 @@ saveUserBtn.addEventListener('click', () => {
             saveUserBtn.textContent = 'KAYDET';
             saveUserBtn.disabled = false;
             
-            // Kullanıcı listesini güncelle
+            // Kullanıcı listesini güncelle ve başarı mesajı göster
             fetchUsers();
+            showPipBoyAlert('Kullanıcı başarıyla kaydedildi!');
         })
         .catch(error => {
             console.error('Kullanıcı kaydedilemedi:', error);
@@ -278,11 +309,11 @@ saveUserBtn.addEventListener('click', () => {
                 errorMessage += error.message;
             }
             
-            alert(errorMessage);
-            
             // Butonu normale döndür
             saveUserBtn.textContent = 'KAYDET';
             saveUserBtn.disabled = false;
+            
+            showPipBoyAlert(errorMessage);
         });
 });
 
@@ -308,7 +339,7 @@ saveSettingsBtn.addEventListener('click', () => {
         playSound('https://www.soundjay.com/buttons/sounds/button-09.mp3');
     }
     
-    alert('Ayarlar kaydedildi!');
+    showPipBoyAlert('Ayarlar kaydedildi!');
 });
 
 // Tema uygulama fonksiyonu
@@ -810,4 +841,46 @@ function refreshCurrentTab() {
             fetchUsers();
         }
     }
+}
+
+// Pip-Boy temalı uyarı (alert) penceresi
+function showPipBoyAlert(message) {
+    return new Promise((resolve) => {
+        // Mevcut dialog varsa kaldır
+        const existingDialog = document.querySelector('.pip-boy-dialog');
+        if (existingDialog) {
+            existingDialog.remove();
+        }
+
+        // Dialog oluştur
+        const dialog = document.createElement('div');
+        dialog.className = 'pip-boy-dialog';
+        dialog.innerHTML = `
+            <div class="pip-boy-dialog-content">
+                <div class="dialog-message">${message}</div>
+                <div class="dialog-buttons">
+                    <button class="pip-boy-btn ok-btn">TAMAM</button>
+                </div>
+            </div>
+        `;
+
+        // Dialog'u sayfaya ekle
+        document.body.appendChild(dialog);
+
+        // Tamam butonuna tıklama olayı ekle
+        const okBtn = dialog.querySelector('.ok-btn');
+
+        okBtn.addEventListener('click', () => {
+            // Tıklama sesi çal
+            playSound('https://www.soundjay.com/buttons/sounds/button-09.mp3');
+            dialog.remove();
+            resolve(true);
+        });
+
+        // Dialog'u göster
+        setTimeout(() => dialog.classList.add('show'), 10);
+        
+        // Tamam butonuna otomatik odaklan
+        setTimeout(() => okBtn.focus(), 100);
+    });
 } 

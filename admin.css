@@ -521,13 +521,14 @@ input:checked + .toggle-slider:before {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(2, 17, 2, 0.9);
+    background-color: rgba(0, 15, 0, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 9999;
     opacity: 0;
     transition: opacity 0.3s ease;
+    backdrop-filter: blur(3px);
 }
 
 .pip-boy-dialog.show {
@@ -536,13 +537,15 @@ input:checked + .toggle-slider:before {
 
 .pip-boy-dialog-content {
     background-color: var(--pip-boy-dark-green);
-    border: 2px solid var(--pip-boy-green);
-    padding: 20px;
-    border-radius: 5px;
+    border: 3px solid var(--pip-boy-green);
+    padding: 25px;
+    border-radius: 8px;
     width: 90%;
     max-width: 400px;
     position: relative;
     text-align: center;
+    box-shadow: 0 0 20px var(--pip-boy-green);
+    animation: dialogAppear 0.3s forwards;
 }
 
 .pip-boy-dialog-content::before {
@@ -564,10 +567,13 @@ input:checked + .toggle-slider:before {
 }
 
 .dialog-message {
-    font-size: 1.5rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.4rem;
     color: var(--pip-boy-light-green);
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     text-shadow: 0 0 5px var(--pip-boy-green);
+    letter-spacing: 1px;
+    line-height: 1.5;
 }
 
 .dialog-buttons {
@@ -577,17 +583,50 @@ input:checked + .toggle-slider:before {
 }
 
 .dialog-buttons .pip-boy-btn {
-    min-width: 100px;
-    padding: 10px 20px;
+    min-width: 120px;
+    padding: 12px 25px;
     font-size: 1.2rem;
+    background-color: rgba(0, 40, 0, 0.6);
+    border: 2px solid var(--pip-boy-green);
+    color: var(--pip-boy-light-green);
+    text-shadow: 0 0 5px var(--pip-boy-green);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    letter-spacing: 2px;
+    font-family: 'Roboto Mono', monospace;
 }
 
 .dialog-buttons .pip-boy-btn:hover {
     transform: scale(1.05);
     box-shadow: 0 0 15px var(--pip-boy-green);
+    background-color: rgba(20, 100, 20, 0.3);
 }
 
-/* Animasyon efekti için */
+.dialog-buttons .pip-boy-btn:active {
+    transform: scale(0.98);
+}
+
+/* Animasyon efektleri */
+@keyframes dialogAppear {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes scanlineMove {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 0 100%;
+    }
+}
+
 .animation-enabled .pip-boy-dialog-content {
     animation: dialogGlow 2s infinite alternate;
 }
@@ -597,6 +636,79 @@ input:checked + .toggle-slider:before {
         box-shadow: 0 0 10px var(--pip-boy-green);
     }
     to {
-        box-shadow: 0 0 20px var(--pip-boy-green);
+        box-shadow: 0 0 25px var(--pip-boy-green);
     }
+}
+
+/* Çıkış mesajı stilleri */
+.logout-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--pip-boy-light-green);
+    text-shadow: 0 0 10px var(--pip-boy-green);
+    letter-spacing: 2px;
+    z-index: 100;
+}
+
+.logout-message h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    animation: textPulse 1.5s infinite;
+}
+
+.loading-bar {
+    width: 250px;
+    height: 20px;
+    background-color: var(--pip-boy-dark-green);
+    border: 2px solid var(--pip-boy-green);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0 auto;
+    box-shadow: 0 0 10px var(--pip-boy-green);
+}
+
+.loading-progress {
+    height: 100%;
+    width: 0%;
+    background-color: var(--pip-boy-green);
+    animation: loadProgress 1.5s ease-in-out forwards;
+}
+
+@keyframes textPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes loadProgress {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+/* Diyalog efektlerini güçlendir */
+.pip-boy-dialog.logout-dialog .pip-boy-dialog-content {
+    border-width: 3px;
+    box-shadow: 
+        0 0 20px var(--pip-boy-green),
+        0 0 40px rgba(20, 254, 23, 0.3);
+}
+
+.pip-boy-dialog.logout-dialog .dialog-message {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.pip-boy-dialog.logout-dialog .dialog-buttons .pip-boy-btn {
+    min-width: 130px;
+    padding: 15px 30px;
 } 
