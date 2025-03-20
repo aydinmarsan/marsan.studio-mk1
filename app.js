@@ -75,6 +75,9 @@ function loginSuccess() {
     const successSound = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
     successSound.play();
     
+    // Giriş durumunu session storage'a kaydet
+    sessionStorage.setItem('pip_boy_auth', 'true');
+    
     setTimeout(() => {
         window.location.href = 'admin.html';
     }, 1500);

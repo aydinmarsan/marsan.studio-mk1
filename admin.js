@@ -37,11 +37,11 @@ userDisplay.textContent = "ADMİN: MARSAN";
 
 // Çıkış butonuna tıklama
 logoutBtn.addEventListener('click', () => {
-    auth.signOut().then(() => {
-        window.location.href = 'index.html';
-    }).catch((error) => {
-        console.error('Çıkış yapılamadı:', error);
-    });
+    // Session Storage'dan oturum bilgisini sil
+    sessionStorage.removeItem('pip_boy_auth');
+    
+    // Ana sayfaya yönlendir
+    window.location.href = 'index.html';
 });
 
 // Sekme değiştirme
@@ -566,8 +566,11 @@ function addClickTest() {
     });
 }
 
-// Sayfa yüklendiğinde ayarları uygula
+// Sayfa yüklendiğinde giriş kontrolü yap
 document.addEventListener('DOMContentLoaded', () => {
+    // Giriş durumunu kontrol et
+    checkAuthStatus();
+    
     // Mevcut kodlar...
     
     // Tema ayarını yükle ve uygula
@@ -619,6 +622,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // addClickTest(); // Gerekirse aktifleştirin
 });
+
+// Giriş durumunu kontrol eden fonksiyon
+function checkAuthStatus() {
+    // Session Storage'dan oturum bilgisi kontrolü
+    const isLoggedIn = sessionStorage.getItem('pip_boy_auth');
+    
+    if (!isLoggedIn) {
+        // Giriş yapılmamış, ana sayfaya yönlendir
+        window.location.href = 'index.html';
+    }
+}
 
 // Not formunu sıfırlama fonksiyonu
 function resetNoteForm() {
