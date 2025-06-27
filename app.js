@@ -69,7 +69,8 @@ function attemptLogin() {
 
 function loginSuccess() {
     loginBtn.textContent = "GİRİŞ BAŞARILI";
-    document.querySelector('.pip-boy-screen').classList.add('success-animation');
+    const screen = document.querySelector('.pip-boy-screen');
+    screen.classList.add('success-animation');
     
     // Başarılı giriş sesi
     const successSound = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
@@ -78,9 +79,22 @@ function loginSuccess() {
     // Giriş durumunu session storage'a kaydet
     sessionStorage.setItem('pip_boy_auth', 'true');
     
+    // Pip-Boy temalı animasyonlu geçiş
     setTimeout(() => {
-        window.location.href = 'admin.html';
-    }, 1500);
+        screen.classList.add('pipboy-success-flash');
+        // Formu devre dışı bırak
+        loginBtn.disabled = true;
+        usernameInput.disabled = true;
+        passwordInput.disabled = true;
+    }, 400);
+    
+    // Animasyon bitince yönlendir
+    screen.addEventListener('animationend', function handler(e) {
+        if (e.animationName === 'pipboy-success-flash') {
+            screen.removeEventListener('animationend', handler);
+            window.location.href = 'admin.html';
+        }
+    });
 }
 
 function loginFailed(message) {

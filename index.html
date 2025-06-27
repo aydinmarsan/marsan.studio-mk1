@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="loader" class="loader-screen">
+        <div class="loader-content">
+            <h1>VAULT-TEC SYSTEMS</h1>
+            <p>Yükleniyor...</p>
+            <div class="loader-spinner"></div>
+        </div>
+    </div>
     <div class="pip-boy-container">
         <div class="pip-boy-frame">
             <div class="pip-boy-screen">
@@ -46,5 +53,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
     <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.getElementById('loader').style.display = 'none';
+            }, 5000);
+        });
+    </script>
 </body>
 </html> 
